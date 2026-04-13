@@ -68,7 +68,7 @@ def build_lstm(
     n_features: int,
     window: int = 24,
     lstm_units: int = 64,
-    dropout: float = 0.2,
+    dropout: float = 0.1,
     dense_units: int = 32,
     learning_rate: float = 1e-3,
 ) -> "keras.Model":
@@ -108,7 +108,7 @@ def build_cnn1d(
     filters: int = 64,
     kernel_size: int = 3,
     dense_units: int = 32,
-    dropout: float = 0.2,
+    dropout: float = 0.1,
     learning_rate: float = 1e-3,
 ) -> "keras.Model":
     """
@@ -156,7 +156,7 @@ def build_cnn_lstm(
     cnn_filters: int = 64,
     kernel_size: int = 3,
     lstm_units: int = 64,
-    dropout: float = 0.2,
+    dropout: float = 0.1,
     dense_units: int = 32,
     learning_rate: float = 1e-3,
 ) -> "keras.Model":
@@ -174,7 +174,7 @@ def build_cnn_lstm(
     MaxPool        : downsample
     Conv1D(32)     : higher-order features
     LSTM(64)       : temporal sequence modelling
-    Dropout(0.2)
+    Dropout(0.1)
     Dense(32, ReLU)
     Output(1, linear)
     """
