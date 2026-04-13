@@ -30,7 +30,7 @@ from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 import joblib
 
-DATA_PATH    = Path("data/pvdaq_combined.csv")
+DATA_PATH    = Path("data/nsrdb_combined.csv")
 RESULTS_DIR  = Path("results")
 RANDOM_STATE = 42
 
