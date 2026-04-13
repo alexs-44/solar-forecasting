@@ -210,7 +210,7 @@ def predict_day(models, scaler, feat_cols, X_raw, window, horizon, weather_df):
     return results
 
 
-def make_forecast_plot(predictions, weather_df, horizon):
+def make_forecast_plot(predictions, weather_df, horizon, date_str):
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8),
                                     gridspec_kw={"height_ratios": [3, 1]})
     fig.patch.set_facecolor("#0d1f2d")
@@ -353,7 +353,7 @@ def main():
             </div>
             """, unsafe_allow_html=True)
 
-        fig = make_forecast_plot(predictions, weather, horizon)
+        fig = make_forecast_plot(predictions, weather, horizon, date_str)
         st.pyplot(fig)
         plt.close(fig)
 
