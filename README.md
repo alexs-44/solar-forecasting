@@ -66,8 +66,8 @@ Results on the held-out 20% test set (1-hour ahead forecasting, 3 years × 5 sit
 | Model | RMSE (W) ↓ | MAE (W) ↓ | R² ↑ |
 |---|---|---|---|
 | Linear Regression | 574 | 409 | 0.742 |
-| LSTM | **525** | **359** | **0.784** |
-| 1D-CNN | 594 | 442 | 0.724 |
+| LSTM | **526** | **359** | **0.784** |
+| 1D-CNN | 538 | 375 | 0.774 |
 | **CNN-LSTM** | **527** | **374** | **0.783** |
 
 LSTM and CNN-LSTM both outperform the linear baseline, confirming that 
@@ -83,10 +83,17 @@ sequential models provide meaningful gains for the 1-hour ahead forecasting task
 Linear Regression dominated instantaneous prediction due to the near-linear 
 irradiance-power relationship, motivating the shift to a true forecasting formulation.
 
-> The CNN-LSTM hybrid achieves the best or even accuracy across all metrics and
+> The CNN-LSTM hybrid achieves the best overall accuracy across all metrics and
 > generalises well to an unseen geographic location, confirming the value of using
 > continuous lat/lon features instead of one-hot site encodings.
 
+**Key Findings:**
+- LSTM and CNN-LSTM outperform Linear Regression under the forecasting 
+  formulation (R²=0.784 vs 0.742)
+- Reducing dropout from 0.2 to 0.1 improved CNN1D from R²=0.724 to R²=0.774
+- Expanding training data from 1 to 3 years improved LSTM R² by 0.068 points
+- Instantaneous prediction is dominated by Linear Regression (R²=0.995) — 
+  reformulating as forecasting is necessary to show deep learning value
 ---
 
 ## How It Works
@@ -94,10 +101,6 @@ irradiance-power relationship, motivating the shift to a true forecasting formul
 ### End-to-end pipeline
 
 ```
-Here's the corrected version:
-markdown## How It Works
-
-### End-to-end pipeline
 NREL NSRDB (manual CSV download)
 │
 ▼
@@ -365,7 +368,7 @@ python src/data_loader.py
 ```
 
 Processes all 15 CSVs, computes AC power via physics model, and saves
-`data/pvdaq_combined.csv` (~30,000 rows).
+`data/nsrdb_combined.csv` (~30,000 rows).
 
 ### Step 5 — Train all models
 
@@ -524,7 +527,7 @@ GitHub: [@alexs-44](https://github.com/alexs-44)
 
 ---
 
-## cknowledgements
+## Acknowledgements
 
 - [NREL NSRDB](https://nsrdb.nlr.gov/data-viewer) — real measured solar radiation data
 - [Open-Meteo](https://open-meteo.com) — free weather forecast API
