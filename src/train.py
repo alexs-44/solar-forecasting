@@ -1,19 +1,13 @@
 """
 train.py
 ========
-End-to-end training script — TRUE FORECASTING MODEL (v3).
+Code writing assisted by Claude AI
+========
+End-to-end training script — SOLAR FORECASTING MODEL. 
 
-What changed from v2:
-  - Linear Regression now trains on flattened 24h windows (same info as deep models)
+  - Linear Regression trains on flattened 24h windows (same info as deep models)
   - All models predict power HORIZON hours ahead, not current power
   - This makes the comparison fair and scientifically meaningful
-
-Why forecasting is more realistic than instantaneous prediction:
-  Grid operators, energy traders, and building managers need to know how much
-  solar power will be available in the coming hours — not right now. Predicting
-  current power from current weather is trivial (nearly linear). Predicting
-  future power from past patterns is the real operational challenge where
-  sequence models like LSTM and CNN-LSTM add genuine value.
 
 Usage:
     python src/train.py
