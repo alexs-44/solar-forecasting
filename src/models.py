@@ -1,7 +1,7 @@
 """
 models.py
 =========
-Model definitions for all four architectures:
+Model definitions for all 4 architectures:
 
   1. LinearRegression      — scikit-learn baseline, flat input
   2. LSTM                  — 24h sliding window, sequential memory
@@ -18,7 +18,7 @@ temporal dependencies in the hybrid model.
         Input (24h, F features)
                │
         ┌──────┴──────────────────────┐
-        │ LSTM          │ CNN1D       │ CNN-LSTM         │
+        │ LSTM          │ CNN1D       │ CNN-LSTM          │
         │ ─────         │ ─────       │ ──────────        │
         │ LSTM(64)      │ Conv1D(64)  │ Conv1D(64)→MaxPool│
         │ Dropout(0.2)  │ MaxPool     │ Conv1D(32)→MaxPool│
@@ -236,7 +236,7 @@ def get_callbacks(model_name: str, patience: int = 12) -> list:
 
 
 # ─────────────────────────────────────────────────
-# Persistence helpers
+# Persistence helpers for saving and loading trained models to and from disk.
 # ─────────────────────────────────────────────────
 
 def save_sklearn_model(model, name: str) -> Path:
