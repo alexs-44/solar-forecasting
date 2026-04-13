@@ -1,6 +1,9 @@
 """
 app.py — SolCast Forecasting Interface 
 =============================================
+Code writing assisted by Claude AI
+=============================================
+
 User enters latitude, longitude, and selects a forecast date.
 The app fetches a real hourly weather forecast from the Open-Meteo API
 and predicts solar PV power output HORIZON hours into the future.
