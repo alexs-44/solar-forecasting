@@ -1,14 +1,10 @@
 """
-app.py — SolarCast Forecasting Interface (v3)
+app.py — SolCast Forecasting Interface 
 =============================================
 User enters latitude, longitude, and selects a forecast date.
 The app fetches a real hourly weather forecast from the Open-Meteo API
 and predicts solar PV power output HORIZON hours into the future.
 
-Key change from v2:
-  Output is clearly labelled as a FUTURE prediction, not an instantaneous
-  reading. The 24-hour input window represents past/current conditions;
-  the model output is what the system will generate N hours from now.
 
 Run:
     streamlit run app/app.py
@@ -34,7 +30,7 @@ sys.path.insert(0, str(ROOT))
 RESULTS_DIR = ROOT / "results"
 
 st.set_page_config(
-    page_title="SolarCast ☀️",
+    page_title="SolCast",
     page_icon="☀️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -258,12 +254,12 @@ def main():
 
     st.markdown(f"""
     <div class="hero">
-        <h1>☀️ SolarCast</h1>
+        <h1> SolCast</h1>
         <p>Enter a location and date to get a <strong>{horizon}-hour ahead</strong>
         solar power forecast driven by real weather data.</p>
     </div>
     <div class="forecast-badge">
-        🕐 Forecasting {horizon} hour(s) ahead using past {window}-hour weather window
+        Forecasting {horizon} hour(s) ahead using past {window}-hour weather window
     </div>
     """, unsafe_allow_html=True)
 
@@ -271,18 +267,18 @@ def main():
     scaler, feat_cols = load_scaler()
 
     if not models or scaler is None:
-        st.error("⚠️ No trained models found. Run `python src/train.py` first.")
+        st.error("ERROR: No trained models found. Run `python src/train.py` first.")
         st.stop()
 
     st.markdown(
-        f'<div class="info-box">✅ {len(models)} model(s) loaded: '
+        f'<div class="info-box"> {len(models)} model(s) loaded: '
         f'{", ".join(models.keys())}</div>',
         unsafe_allow_html=True,
     )
 
     # ── Sidebar ───────────────────────────────────────────────────────────────
     with st.sidebar:
-        st.header("📍 Location & Date")
+        st.header(" Location & Date")
         preset = st.selectbox("Quick-pick a site", [
             "Custom",
             "Phoenix, AZ (Hot Desert)",
@@ -328,15 +324,15 @@ def main():
                                       X_raw, window, horizon)
 
         st.subheader(
-            f"📅 {horizon}-Hour Ahead Forecast — {date_str}  |  "
+            f"{horizon}-Hour Ahead Forecast — {date_str}  |  "
             f"{lat:.3f}°N, {lon:.3f}°E"
         )
 
         st.markdown(f"""
         <div class="info-box">
-        ℹ️ These predictions show estimated power output <strong>{horizon} hour(s)
+        NOTE: These predictions show estimated power output <strong>{horizon} hour(s)
         from each time step</strong>, based on weather patterns in the preceding
-        {window} hours. This is a true forecast — not an instantaneous reading.
+        {window} hours. This is a forecast rather than an instantaneous reading.
         </div>
         """, unsafe_allow_html=True)
 
@@ -356,7 +352,7 @@ def main():
         st.pyplot(fig)
         plt.close(fig)
 
-        with st.expander("📊 Hourly Predictions (W)"):
+        with st.expander("Hourly Predictions (W)"):
             table = pd.DataFrame({"Hour": range(24)})
             for name, preds in predictions.items():
                 table[name] = preds.round(1)
@@ -366,21 +362,21 @@ def main():
     else:
         st.markdown("""
         <div class="info-box">
-        👈 Select a location and date in the sidebar, then click
+        Select a location and date in the sidebar, then click
         <strong>Run Forecast</strong>.
         </div>
         """, unsafe_allow_html=True)
         comp = RESULTS_DIR / "plots" / "model_comparison.png"
         if comp.exists():
-            st.subheader("📊 Training Results")
+            st.subheader("Training Results")
             st.image(str(comp), caption="Model Comparison on Forecasting Test Set")
 
     st.markdown("---")
-    with st.expander("ℹ️ Why forecasting instead of instantaneous prediction?"):
+    with st.expander("Why forecasting instead of instantaneous prediction?"):
         st.markdown(f"""
 **The problem with predicting current power from current weather:**
 A simple linear equation (Power ≈ 0.18 × GHI × area) explains >99% of variance.
-There's nothing for a neural network to learn — Linear Regression wins trivially.
+There's nothing for a neural network to learn and Linear Regression wins trivially.
 
 **The real operational need:**
 Grid operators and building managers need to know generation *in advance* — not
