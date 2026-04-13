@@ -234,7 +234,7 @@ def make_forecast_plot(predictions, weather_df, horizon):
     )
     ax1.set_ylabel("Predicted AC Power (kW)", color="#c9d9e8", fontsize=11)
     ax1.set_title(
-        f"Solar Power Forecast — {horizon}h Ahead Prediction",
+        f"Solar Power Forecast — Hourly 1h-Ahead Predictions for {date_str}",
         color="#f5f5f5", fontsize=13, fontweight="bold", pad=10,
     )
     ax1.legend(fontsize=9, facecolor="#0d1f2d",
@@ -327,7 +327,7 @@ def main():
                           X_raw, window, horizon, weather)
 
         st.subheader(
-            f"{horizon}-Hour Ahead Forecast — {date_str}  |  "
+            f"{horizon}-24-Hour Forecast for — {date_str}  |  "
             f"{lat:.3f}°N, {lon:.3f}°E"
         )
 
