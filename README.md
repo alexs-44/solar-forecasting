@@ -66,9 +66,9 @@ Results on the held-out 20% test set (1-hour ahead forecasting, 3 years × 5 sit
 | Model | RMSE (W) ↓ | MAE (W) ↓ | R² ↑ |
 |---|---|---|---|
 | Linear Regression | 574 | 409 | 0.742 |
-| LSTM | **526** | **359** | **0.784** |
+| **LSTM** | **526** | **359** | **0.784** |
 | 1D-CNN | 538 | 375 | 0.774 |
-| **CNN-LSTM** | **527** | **374** | **0.783** |
+| **CNN-LSTM** | **527** | 374 | **0.783** |
 
 LSTM and CNN-LSTM both outperform the linear baseline, confirming that 
 sequential models provide meaningful gains for the 1-hour ahead forecasting task.
