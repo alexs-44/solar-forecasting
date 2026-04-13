@@ -28,10 +28,11 @@ across five North American climate zones. Compares Linear Regression, LSTM,
 7. [Quick Start — Local](#-quick-start--local)
 8. [Running the App](#-running-the-app)
 9. [Reproducing Results](#-reproducing-results)
-10. [Weather API](#-weather-api)
-11. [Configuration](#-configuration)
-12. [Troubleshooting](#-troubleshooting)
-13. [Author](#-author)
+10. [Limitations](#-limitations)
+11. [Weather API](#-weather-api)
+12. [Configuration](#-configuration)
+13. [Troubleshooting](#-troubleshooting)
+14. [Author](#-author)
 
 ---
 
@@ -443,6 +444,15 @@ All random seeds are fixed for reproducibility:
 - TensorFlow global seed set at import in `train.py`
 
 ---
+
+## Limitations 
+
+Models were trained on 5 North American sites (25°N–48°N latitude and 71°N–122°W longitude).
+Predictions for locations significantly outside this range, particularly
+different climate zones or continents, may be unreliable due to
+distribution shift.
+
+------
 
 ## Weather API
 
