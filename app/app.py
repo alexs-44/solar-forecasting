@@ -262,7 +262,7 @@ def main():
         solar power forecast driven by real weather data.</p>
     </div>
     <div class="forecast-badge">
-        Forecasting {horizon} hour(s) ahead using past {window}-hour weather window
+        Each hourly prediction uses the past {window} hours of weather data to forecast 1 hour ahead
     </div>
     """, unsafe_allow_html=True)
 
