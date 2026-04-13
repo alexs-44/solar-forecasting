@@ -258,8 +258,7 @@ def main():
     st.markdown(f"""
     <div class="hero">
         <h1> SolCast <span style="font-weight:400; font-style:italic; font-size:1.8rem;">— Solar Output Forecasting</span></h1>
-        <p>Enter a location and date to get a <strong>{horizon}-hour ahead</strong>
-        solar power forecast driven by real weather data.</p>
+        <p>Enter a location and date to get a full-day solar power forecast. Each hour is predicted 1 hour in advance using real weather data.
     </div>
     <div class="forecast-badge">
         Each hourly prediction uses the past {window} hours of weather data to forecast 1 hour ahead
