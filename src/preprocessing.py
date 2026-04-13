@@ -3,7 +3,7 @@ preprocessing.py
 ================
 Feature engineering and preprocessing pipeline.
 
-v3 changes — TRUE FORECASTING MODEL:
+TRUE FORECASTING MODEL:
   - Target is now y(t + HORIZON) instead of y(t)
   - make_sequences() accepts a `horizon` parameter (default 1 = 1 hour ahead)
   - Sequences never cross site boundaries
@@ -13,7 +13,7 @@ v3 changes — TRUE FORECASTING MODEL:
 Why this matters:
   Predicting current power from current weather is trivially easy (linear).
   Predicting future power from past weather patterns is the real operational
-  problem — grid operators need advance notice of generation, not instant
+  problem as grid operators need advance notice of generation, not instant
   readings. With a forecast horizon, LSTM and CNN-LSTM are now the appropriate
   tools because they can learn temporal patterns (e.g. morning cloud clearing,
   afternoon temperature peaks) that persist into future time steps.
@@ -83,7 +83,7 @@ def add_lag_features(df: pd.DataFrame, lags: list[int] = [1, 2, 3]) -> pd.DataFr
       If the system produced 3,000W an hour ago and 3,200W just now, that
       upward trend carries real information about what will happen next.
       Without lag features, the model has no direct knowledge of recent
-      system state — only weather inputs.
+      system state, and will know only weather inputs.
 
     Features added:
       power_lag_1, _2, _3 : actual power output 1, 2, 3 hours ago
@@ -95,7 +95,7 @@ def add_lag_features(df: pd.DataFrame, lags: list[int] = [1, 2, 3]) -> pd.DataFr
     """
     df = df.copy()
 
-    # Per-site lag computation — never bleed values across site boundaries
+    # Per-site lag computation to never bleed values across site boundaries
     for lag in lags:
         df[f"power_lag_{lag}"] = (
             df.groupby("site_id")["ac_power_w"].shift(lag)
@@ -205,7 +205,6 @@ def make_sequences(
     INPUT  : X[i : i+window]          — past `window` hours of weather
     TARGET : y[i + window + horizon-1] — power `horizon` hours after window ends
 
-    This is the key change from v2 (which used y[i] = current power).
     With horizon > 0, models must learn from temporal patterns to anticipate
     future conditions — making LSTM and CNN architectures meaningful.
 
