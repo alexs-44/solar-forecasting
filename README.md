@@ -153,7 +153,7 @@ known sites and predict for any location on Earth.
 
 **Why lag features?** For 1-hour ahead forecasting, recent power output and
 irradiance trend carry strong predictive signal. A rising GHI over the past hour
-suggests clearing skies; a falling one suggests incoming cloud cover.
+suggests clearing skies, whereas a falling one suggests incoming cloud cover.
 
 ### Data splits
 
