@@ -310,7 +310,7 @@ def main():
             max_value=date.today() + timedelta(days=6),
         )
         st.markdown("---")
-        run_btn = st.button("⚡ Run Forecast", use_container_width=True,
+        run_btn = st.button("Run Forecast", use_container_width=True,
                             type="primary")
 
     # ── Main panel ────────────────────────────────────────────────────────────
