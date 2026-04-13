@@ -30,7 +30,7 @@ sys.path.insert(0, str(ROOT))
 RESULTS_DIR = ROOT / "results"
 
 st.set_page_config(
-    page_title="SolCast — Solar Output Forecasting",
+    page_title="SolCast",
     page_icon="☀️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -257,7 +257,7 @@ def main():
 
     st.markdown(f"""
     <div class="hero">
-        <h1> SolCast <span style="font-weight:400; font-style:italic; font-size:1.8rem;">— solar output forecasting</span></h1>
+        <h1> SolCast <span style="font-weight:400; font-style:italic; font-size:1.8rem;">— Solar Output Forecasting</span></h1>
         <p>Enter a location and date to get a <strong>{horizon}-hour ahead</strong>
         solar power forecast driven by real weather data.</p>
     </div>
