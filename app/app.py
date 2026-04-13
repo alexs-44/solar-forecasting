@@ -200,6 +200,9 @@ def predict_day(models, scaler, feat_cols, X_raw, window, horizon):
                 val = float(model.predict(seq, verbose=0).flatten()[0])
 
             preds[h] = max(0, val)
+        # Zero out nighttime hours where GHI is below generation threshold
+        night_mask = weather_df["ghi"].values < 50
+        preds[night_mask] = 0.0
         results[name] = preds
     return results
 
