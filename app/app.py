@@ -30,7 +30,7 @@ sys.path.insert(0, str(ROOT))
 RESULTS_DIR = ROOT / "results"
 
 st.set_page_config(
-    page_title="SolCast",
+    page_title="SolCast — Solar Output Forecasting",
     page_icon="☀️",
     layout="wide",
     initial_sidebar_state="expanded",
