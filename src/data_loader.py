@@ -1,6 +1,8 @@
 """
 data_loader.py
-==============
+=============
+Code writing assisted by Claude AI
+=============
 Loads real NREL NSRDB solar irradiance and meteorological data for 5 North
 American sites across 3 years (2017, 2018, 2019), computes AC power output
 using a physics-based PV model, and saves a combined dataset to
