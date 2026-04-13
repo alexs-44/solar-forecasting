@@ -44,7 +44,7 @@ without the right tools. This project builds an end-to-end machine learning pipe
 that answers a simple question:
 
  **Given a location and a weather forecast, how much power will a 5 kW solar
- system produce tomorrow?**
+ system produce on a selected day?**
 
 The pipeline covers everything from raw data ingestion through model training,
 evaluation, and a live interactive web application.
