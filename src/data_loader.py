@@ -6,7 +6,7 @@ Code writing assisted by Claude AI
 Loads real NREL NSRDB solar irradiance and meteorological data for 5 North
 American sites across 3 years (2017, 2018, 2019), computes AC power output
 using a physics-based PV model, and saves a combined dataset to
-data/pvdaq_combined.csv.
+data/nsrdb_combined.csv.
 
 Data source:
     NREL National Solar Radiation Database (NSRDB)
@@ -63,7 +63,7 @@ INV_EFF           = 0.96
 GHI_NIGHT_THRESH  = 50
 TARGET_PER_SITE   = 6000   # ~2000 per year × 3 years
 DATA_DIR          = Path("data")
-OUTPUT_PATH       = DATA_DIR / "pvdaq_combined.csv"
+OUTPUT_PATH       = DATA_DIR / "nsrdb_combined.csv"
 
 
 def compute_poa(ghi, zenith, tilt=20.0):
