@@ -185,7 +185,7 @@ def main():
                   .sort_values(["site_id", "timestamp"])
                   .reset_index(drop=True))
 
-    # Inject 2% missing values
+    # Inject 2% missing values to simulate sensor dropout
     for col in ["t_ambient", "wind_speed"]:
         mask = rng.random(len(combined)) < 0.02
         combined.loc[mask, col] = np.nan
