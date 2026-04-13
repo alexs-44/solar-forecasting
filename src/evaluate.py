@@ -1,6 +1,8 @@
 """
 evaluate.py
-===========
+=========
+Code writing assisted by Claude AI
+=========
 Evaluation script for the forecasting model.
 
 All models are evaluated on their ability to predict power HORIZON hours ahead
