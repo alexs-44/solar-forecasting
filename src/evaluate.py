@@ -1,10 +1,10 @@
 """
 evaluate.py
 ===========
-Evaluation script for the forecasting model (v3).
+Evaluation script for the forecasting model.
 
 All models are evaluated on their ability to predict power HORIZON hours ahead
-using only past weather data — not current conditions.
+using only past weather data, not current conditions.
 """
 
 from __future__ import annotations
