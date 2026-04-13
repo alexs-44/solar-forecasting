@@ -6,7 +6,6 @@
 ![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
 ![Data](https://img.shields.io/badge/Data-NREL%20PVDAQ-yellow)
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alexs-44/solar-forecasting/blob/main/notebooks/Solar_Forecasting_Colab.ipynb)
 
 > **Predict the AC power output of a solar PV system for any location on Earth —
 > enter a latitude, longitude, and date, and SolCast fetches a real weather
