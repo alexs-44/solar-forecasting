@@ -158,7 +158,7 @@ suggests clearing skies; a falling one suggests incoming cloud cover.
 ### Data splits
 
 **Time-based (default):** The last 20% of each site's time series is held out
-for testing. This is the most realistic protocol — you never train on the future.
+for testing. This is the most realistic protocol as we should never train on the future.
 
 ---
 
