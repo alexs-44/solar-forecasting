@@ -1,6 +1,9 @@
 """
 preprocessing.py
+===============
+Code writing assisted by Claude AI
 ================
+
 Feature engineering and preprocessing pipeline.
 
 TRUE FORECASTING MODEL:
