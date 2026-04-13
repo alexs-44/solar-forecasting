@@ -72,7 +72,7 @@ def train_deep_model(model, name, X_seq_tr, y_seq_tr):
 
 
 def train_all():
-    data_path = Path("data/pvdaq_combined.csv")
+    data_path = Path("data/nsrdb_combined.csv")
     if not data_path.exists():
         print("\n  No dataset found. Run python src/data_loader.py first.")
         sys.exit(1)
