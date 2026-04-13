@@ -1,5 +1,7 @@
 """
 models.py
+========
+Code writing assisted by Claude AI
 =========
 Model definitions for all 4 architectures:
 
