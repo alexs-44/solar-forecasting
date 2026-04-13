@@ -19,20 +19,20 @@ across five North American climate zones. Compares Linear Regression, LSTM,
 
 ## Table of Contents
 
-1. [Project Objective]
-2. [Key Results]
-3. [How It Works]
-4. [Repository Structure]
-5. [Dataset]
-6. [Model Architectures]
-7. [Quick Start — Local]
-8. [Running the App]
-9. [Reproducing Results]
-10. [Limitations]
-11. [Weather API]
-12. [Configuration]
-13. [Troubleshooting]
-14. [Author]
+1. Project Objective
+2. Key Results
+3. How It Works
+4. Repository Structure
+5. Dataset
+6. Model Architectures
+7. Quick Start — Local
+8. Running the App
+9. Reproducing Results
+10. Limitations
+11. Weather API
+12. Configuration
+13. Troubleshooting
+14. Author
 
 ---
 
