@@ -257,7 +257,7 @@ def main():
 
     st.markdown(f"""
     <div class="hero">
-        <h1> SolCast</h1>
+        <h1> SolCast <span style="font-weight:400; font-style:italic; font-size:1.8rem;">— solar output forecasting</span></h1>
         <p>Enter a location and date to get a <strong>{horizon}-hour ahead</strong>
         solar power forecast driven by real weather data.</p>
     </div>
