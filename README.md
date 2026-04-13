@@ -7,8 +7,8 @@
 ![Data](https://img.shields.io/badge/Data-NREL%20NSRDB-yellow)
 
 
-> **Predict the AC power output of a solar PV system for any location on Earth —
-> enter a latitude, longitude, and date, and SolCast fetches a real weather
+> **Predict the AC power output of a solar PV system for any location on Earth.
+> Simply enter a latitude, longitude, and date, and SolCast fetches a real weather
 > forecast and runs four ML models to give you an hourly power prediction.**
 
 Trained on real measured data from the [NSRDB](https://nsrdb.nlr.gov/data-viewer) database
