@@ -167,7 +167,7 @@ MODEL_COLORS = {
 }
 
 
-def predict_day(models, scaler, feat_cols, X_raw, window, horizon):
+def predict_day(models, scaler, feat_cols, X_raw, window, horizon, weather_df):
     """
     Run all models for a full 24-hour day.
 
@@ -324,7 +324,7 @@ def main():
         with st.spinner("Running forecast models…"):
             X_raw       = build_features(weather, lat, lon, date_str, feat_cols)
             predictions = predict_day(models, scaler, feat_cols,
-                                      X_raw, window, horizon)
+                          X_raw, window, horizon, weather)
 
         st.subheader(
             f"{horizon}-Hour Ahead Forecast — {date_str}  |  "
