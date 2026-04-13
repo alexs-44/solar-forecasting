@@ -347,7 +347,7 @@ def main():
             <div class="metric-card">
                 <div class="model-label">{name}</div>
                 <div class="power-val">{peak/1000:.2f} kW</div>
-                <div class="power-sub">Peak  |  {total:.1f} kWh/day</div>
+                <div class="power-sub">Daily yield: {total:.1f} kWh</div>
             </div>
             """, unsafe_allow_html=True)
 
