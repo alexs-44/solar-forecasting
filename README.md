@@ -1,4 +1,4 @@
-# ☀️ SolarCast — Solar PV Power Forecasting
+# SolCast — Solar PV Power Forecasting
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.13+-orange)
@@ -9,16 +9,16 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alexs-44/solar-forecasting/blob/main/notebooks/Solar_Forecasting_Colab.ipynb)
 
 > **Predict the AC power output of a solar PV system for any location on Earth —
-> enter a latitude, longitude, and date, and SolarCast fetches a real weather
+> enter a latitude, longitude, and date, and SolCast fetches a real weather
 > forecast and runs four ML models to give you an hourly power prediction.**
 
-Trained on real measured data from the [NREL PVDAQ](https://pvdaq.nrel.gov) database
+Trained on real measured data from the [NSRDB](https://nsrdb.nlr.gov/data-viewer) database
 across five North American climate zones. Compares Linear Regression, LSTM,
 1D-CNN, and a CNN-LSTM hybrid.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 1. [Project Objective](#-project-objective)
 2. [Key Results](#-key-results)
@@ -30,14 +30,14 @@ across five North American climate zones. Compares Linear Regression, LSTM,
 8. [Quick Start — Google Colab](#-quick-start--google-colab)
 9. [Running the App](#-running-the-app)
 10. [Reproducing Results](#-reproducing-results)
-11. [API Keys & Environment Setup](#-api-keys--environment-setup)
+11. [Weather API](#-weather-api)
 12. [Configuration](#-configuration)
 13. [Troubleshooting](#-troubleshooting)
 14. [Author](#-author)
 
 ---
 
-## 🎯 Project Objective
+## Project Objective
 
 Solar photovoltaic systems are the fastest-growing source of electricity worldwide,
 but their output varies with weather conditions in ways that are hard to predict
@@ -52,67 +52,76 @@ evaluation, and a live interactive web application.
 
 ### What this project demonstrates
 
-- Fetching and preprocessing real measured PV data from a public government API
+- Downloading and preprocessing real measured irradiance data from the NREL NSRDB database
 - Engineering physically meaningful features (cyclical time encodings,
   geographic coordinates, NOCT-based module temperature)
 - Training and comparing four model architectures on the same dataset
 - Building a production-style inference app backed by a live weather API
-- Applying best practices: reproducible seeds, time-aware splits, no data leakage
 
 ---
 
-## 📊 Key Results
+## Key Results
 
-Results on the held-out 20% test set (time-based chronological split):
+Results on the held-out 20% test set (1-hour ahead forecasting, 3 years × 5 sites):
 
-| Model | RMSE (W) ↓ | MAE (W) ↓ | R² ↑ | Training Time |
-|---|---|---|---|---|
-| Linear Regression | ~280 | ~195 | ~0.880 | < 1s |
-| LSTM | ~145 | ~91 | ~0.961 | ~4 min |
-| 1D-CNN | ~130 | ~82 | ~0.968 | ~2 min |
-| **CNN-LSTM** | **~110** | **~68** | **~0.975** | **~5 min** |
+| Model | RMSE (W) ↓ | MAE (W) ↓ | R² ↑ |
+|---|---|---|---|
+| Linear Regression | 574 | 409 | 0.742 |
+| LSTM | **525** | **359** | **0.784** |
+| 1D-CNN | 594 | 442 | 0.724 |
+| **CNN-LSTM** | **527** | **374** | **0.783** |
 
-**Cross-site generalisation** (train: 4 sites → test: Milwaukee WI, unseen):
+LSTM and CNN-LSTM both outperform the linear baseline, confirming that 
+sequential models provide meaningful gains for the 1-hour ahead forecasting task.
 
-| Model | RMSE (W) | R² |
-|---|---|---|
-| Linear Regression | ~310 | ~0.852 |
-| CNN-LSTM | ~125 | ~0.971 |
+**Instantaneous prediction baseline** (for reference):
 
-> The CNN-LSTM hybrid achieves the best accuracy across all metrics and generalises
-> well to an unseen geographic location, confirming the value of using continuous
-> lat/lon features instead of one-hot site encodings.
+| Model | R² |
+|---|---|
+| Linear Regression | 0.995 |
+| LSTM | 0.714 |
+
+Linear Regression dominated instantaneous prediction due to the near-linear 
+irradiance-power relationship, motivating the shift to a true forecasting formulation.
+
+> The CNN-LSTM hybrid achieves the best or even accuracy across all metrics and
+> generalises well to an unseen geographic location, confirming the value of using
+> continuous lat/lon features instead of one-hot site encodings.
 
 ---
 
-## 🔬 How It Works
+## How It Works
 
 ### End-to-end pipeline
 
 ```
-NREL PVDAQ API
-     │
-     ▼
-src/data_loader.py          ← fetches real measured PV data for 5 sites
-     │
-     ▼
-src/preprocessing.py        ← cleans, resamples, engineers features, splits
-     │
-     ▼
+Here's the corrected version:
+markdown## How It Works
+
+### End-to-end pipeline
+NREL NSRDB (manual CSV download)
+│
+▼
+src/data_loader.py          ← loads and processes real NSRDB data for 5 sites
+│
+▼
+src/preprocessing.py        ← feature engineering, lag features, train/test splits
+│
+▼
 src/train.py                ← trains all 4 models, saves artefacts
-     │
-     ▼
+│
+▼
 src/evaluate.py             ← computes RMSE/MAE/R², generates all plots
-     │
-     ▼
+│
+▼
 app/app.py                  ← Streamlit app: user enters lat/lon + date
-                                → Open-Meteo API fetches real forecast
-                                → all models predict hourly power output
+→ Open-Meteo API fetches real forecast
+→ all models predict hourly power 1h ahead
 ```
 
 ### Feature engineering
 
-Every input row contains 11 features:
+Every input row contains 16 features:
 
 | Feature | Type | Description |
 |---|---|---|
@@ -127,6 +136,11 @@ Every input row contains 11 features:
 | `doy_cos` | Derived | `cos(2π × doy / 365)` — cyclical day-of-year |
 | `lat` | Geographic | Latitude — continuous, enables unseen-location generalisation |
 | `lon` | Geographic | Longitude — continuous, replaces one-hot site encoding |
+| `power_lag_1` | Lag | Actual AC power output 1 hour ago |
+| `power_lag_2` | Lag | Actual AC power output 2 hours ago |
+| `power_lag_3` | Lag | Actual AC power output 3 hours ago |
+| `ghi_lag_1` | Lag | GHI 1 hour ago — cloud persistence signal |
+| `ghi_delta` | Derived | GHI change from last hour — indicates clearing or clouding |
 
 **Why cyclical encoding?** Hour 23 and hour 0 are adjacent in time but numerically
 far apart. `sin`/`cos` encoding wraps the values so the model sees that adjacency.
@@ -135,133 +149,134 @@ far apart. `sin`/`cos` encoding wraps the values so the model sees that adjacenc
 not seen during training. Continuous coordinates let the model interpolate between
 known sites and predict for any location on Earth.
 
+**Why lag features?** For 1-hour ahead forecasting, recent power output and
+irradiance trend carry strong predictive signal. A rising GHI over the past hour
+suggests clearing skies; a falling one suggests incoming cloud cover.
+
 ### Data splits
 
-Two evaluation protocols are implemented:
-
-**Option A — Time-based (default):** The last 20% of each site's time series is
-held out for testing. This is the most realistic protocol because it mimics true
-forecasting — you never train on the future.
-
-**Option B — Cross-site:** One entire site is withheld for testing. The model is
-trained on the other four and evaluated on the unseen location. This tests geographic
-generalisation.
+**Time-based (default):** The last 20% of each site's time series is held out
+for testing. This is the most realistic protocol — you never train on the future.
 
 ---
 
-## 🗂️ Repository Structure
+## Repository Structure
 
 ```
 solar-forecasting/
 │
-├── src/                            ← Core pipeline modules
-│   ├── data_loader.py              ← NREL PVDAQ API fetcher & cleaner
-│   ├── preprocessing.py            ← Feature engineering & train/test splits
-│   ├── models.py                   ← All four model definitions
-│   ├── train.py                    ← End-to-end training script
-│   └── evaluate.py                 ← Metrics, plots, evaluation
+├── src/
+│   ├── data_loader.py      ← loads NSRDB CSVs, computes AC power via physics model
+│   ├── preprocessing.py    ← feature engineering, lag features, train/test splits
+│   ├── models.py           ← all four model definitions (LR, LSTM, CNN1D, CNN-LSTM)
+│   ├── train.py            ← end-to-end training script
+│   └── evaluate.py         ← metrics, plots, evaluation
 │
 ├── app/
-│   └── app.py                      ← Streamlit inference interface
+│   └── app.py              ← Streamlit inference interface
 │
-├── notebooks/
-│   └── Solar_Forecasting_Colab.ipynb   ← Self-contained Colab notebook
+├── data/                   ← place NSRDB CSV files here (gitignored)
+│   ├── Phoenix_2017.csv ... Phoenix_2019.csv
+│   ├── Denver_2017.csv  ... Denver_2019.csv
+│   ├── Seattle_2017.csv ... Seattle_2019.csv
+│   ├── Miami_2017.csv   ... Miami_2019.csv
+│   └── Boston_2017.csv  ... Boston_2019.csv
 │
-├── data/                           ← Auto-populated by data_loader.py
-│   └── pvdaq_combined.csv          ← ~10,000 rows, 5 sites (gitignored)
-│
-├── results/                        ← Auto-populated by train.py & evaluate.py
-│   ├── linear_regression.pkl       ← Trained scikit-learn model
-│   ├── lstm_best.keras             ← Best LSTM checkpoint
-│   ├── cnn1d_best.keras            ← Best CNN1D checkpoint
-│   ├── cnn_lstm_best.keras         ← Best CNN-LSTM checkpoint
-│   ├── scaler.pkl                  ← Fitted StandardScaler
-│   ├── feature_cols.pkl            ← Ordered feature column names
-│   ├── metrics.json                ← Final test-set metrics (all models)
-│   ├── lstm_history.json           ← LSTM training loss per epoch
-│   ├── cnn1d_history.json          ← CNN1D training loss per epoch
-│   ├── cnn_lstm_history.json       ← CNN-LSTM training loss per epoch
-│   └── plots/                      ← All generated PNG figures
+├── results/
+│   ├── linear_regression.pkl
+│   ├── lstm_best.keras
+│   ├── cnn1d_best.keras
+│   ├── cnn_lstm_best.keras
+│   ├── scaler.pkl
+│   ├── feature_cols.pkl
+│   ├── config.json
+│   ├── metrics.json
+│   ├── lstm_history.json
+│   ├── cnn1d_history.json
+│   ├── cnn_lstm_history.json
+│   └── plots/
 │       ├── actual_vs_predicted.png
 │       ├── residuals.png
 │       ├── model_comparison.png
 │       ├── training_curves.png
 │       └── time_series_comparison.png
 │
-├── .env                            ← Your API keys (gitignored — never commit)
 ├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
-
 ---
 
-## 🌍 Dataset
+## Dataset
 
 ### Source
 
-Real measured data from the **NREL PV Data Acquisition (PVDAQ)** system —
-a network of instrumented PV systems across the United States, operated by the
-National Renewable Energy Laboratory. Data is freely available at
-[pvdaq.nrel.gov](https://pvdaq.nrel.gov) with a free API key from
-[developer.nrel.gov](https://developer.nrel.gov/signup).
+Real measured solar radiation data from the **NREL National Solar Radiation
+Database (NSRDB)** — a satellite-derived, serially complete collection of
+hourly irradiance and meteorological data for the United States.
+
+Downloaded manually from [nsrdb.nlr.gov/data-viewer](https://nsrdb.nlr.gov/data-viewer).
+No API key required for download.
 
 ### Sites
 
 | # | Location | Climate | Lat | Lon |
 |---|---|---|---|---|
-| 1 | Tucson, AZ | Hot Desert (Sonoran) | 32.2°N | 110.9°W |
-| 2 | Las Vegas, NV | Hot Desert (Mojave) | 36.2°N | 115.2°W |
-| 3 | Fresno, CA | Coastal Valley | 36.7°N | 119.8°W |
-| 4 | Boulder, CO | Cold Continental | 40.0°N | 105.3°W |
-| 5 | Milwaukee, WI | Humid Continental | 43.0°N | 87.9°W |
+| 1 | Phoenix, AZ | Hot Desert | 33.45°N | 112.07°W |
+| 2 | Denver, CO | Cold Continental | 39.74°N | 104.98°W |
+| 3 | Seattle, WA | Marine | 47.61°N | 122.33°W |
+| 4 | Miami, FL | Humid Subtropical | 25.77°N | 80.19°W |
+| 5 | Boston, MA | Temperate | 42.36°N | 71.06°W |
 
 ### Processing steps
 
-1. Fetch 15-minute resolution data via the PVDAQ REST API
-2. Resample to hourly resolution (mean aggregation)
-3. Filter nighttime records where GHI < 50 W/m²
-4. Clip physically impossible values (GHI > 1400, power < 0)
-5. Derive missing columns (POA from GHI proxy, T_module from NOCT)
-6. Subsample to 2,000 rows per site (10,000 total, balanced)
-7. Inject 2% missing values in temperature and wind columns (realistic)
-8. Impute missing values using per-site column median
-
+1. Download hourly CSV files from NSRDB viewer (2017, 2018, 2019 per site)
+2. Filter nighttime records where GHI < 50 W/m²
+3. Compute POA irradiance and module temperature via NOCT model
+4. Compute AC power output using efficiency-based PV model
+5. Subsample to 6,000 rows per site (30,000 total, balanced across years)
+6. Inject 2% missing values in temperature and wind columns (realistic)
+7. Impute missing values using per-site column median
 ---
 
-## 🤖 Model Architectures
+## Model Architectures
 
 ### 1. Linear Regression (Baseline)
 
-Ordinary least-squares on the flat 11-feature vector. Fast to train, interpretable,
-but cannot capture nonlinear relationships or temporal patterns.
+Ordinary least-squares on a flattened 24-hour window (384 features = 24 × 16).
+Trained on the same past-window information as the deep models for a fair
+comparison. Fast to train but cannot capture nonlinear relationships or
+sequential patterns.
 
 ```
-Input (11,) → LinearRegression → Output (1,)
+Input (24 × 16 = 384,) → LinearRegression → Output: AC Power 1h ahead (W)
 ```
 
 ### 2. LSTM
 
-Long Short-Term Memory network. Processes a 24-hour sliding window and uses gated
-memory cells to capture temporal dependencies like cloud persistence and thermal inertia.
+Long Short-Term Memory network. Processes a 24-hour sliding window and uses
+gated memory cells to capture temporal dependencies like cloud persistence
+and thermal inertia, which gives it a genuine advantage over linear models for
+forecasting tasks.
 
 ```
-Input (24, 11)
+Input (24, 16)
     → LSTM(64 units)
     → Dropout(0.2)
     → Dense(32, ReLU)
     → Dense(1, linear)
-    → Output: AC Power (W)
+    → Output: AC Power 1h ahead (W)
 ```
 
 ### 3. 1D-CNN
 
-One-dimensional convolutional network. Uses learned filters to detect local patterns
-in the 24-hour window (e.g. morning irradiance ramp-up, cloud transients). Faster
-to train than LSTM with competitive accuracy.
+One-dimensional convolutional network. Uses learned filters to detect local
+patterns in the 24-hour window (e.g. morning irradiance ramp-up, cloud
+transients). Faster to train than LSTM but less effective at long-range
+temporal dependencies.
 
 ```
-Input (24, 11)
+Input (24, 16)
     → Conv1D(64 filters, kernel=3, ReLU)
     → MaxPool1D(2)
     → Conv1D(32 filters, kernel=3, ReLU)
@@ -269,18 +284,18 @@ Input (24, 11)
     → Dropout(0.2)
     → Dense(32, ReLU)
     → Dense(1, linear)
-    → Output: AC Power (W)
+    → Output: AC Power 1h ahead (W)
 ```
 
 ### 4. CNN-LSTM Hybrid
 
-The CNN block extracts rich local features from each segment of the window;
-the LSTM then models how those features evolve across the full 24-hour sequence.
-Combines the pattern-recognition strength of CNNs with the sequential memory
-of LSTMs — typically the best-performing of the four.
+The CNN block extracts local irradiance patterns from the window. The LSTM
+then models how those features evolve across the full 24-hour sequence.
+It combines the pattern-recognition strength of CNNs with the sequential memory
+of LSTMs and is competitive with a standalone LSTM on this dataset.
 
 ```
-Input (24, 11)
+Input (24, 16)
     → Conv1D(64 filters, kernel=3, ReLU)   ← local feature extraction
     → MaxPool1D(2)
     → Conv1D(32 filters, kernel=3, ReLU)   ← higher-order features
@@ -288,7 +303,7 @@ Input (24, 11)
     → Dropout(0.2)
     → Dense(32, ReLU)
     → Dense(1, linear)
-    → Output: AC Power (W)
+    → Output: AC Power 1h ahead (W)
 ```
 
 ### Training configuration (all deep models)
@@ -303,15 +318,15 @@ Input (24, 11)
 | Early stopping patience | 12 epochs |
 | Validation split | 10% of training data |
 | Sliding window | 24 hours |
+| Forecast horizon | 1 hour ahead |
 
 ---
 
-## 🚀 Quick Start — Local
+## Quick Start — Local
 
 ### Prerequisites
 
 - Python 3.10 or newer
-- A free NREL API key (see [API Keys](#-api-keys--environment-setup))
 - Git
 
 ### Step 1 — Clone the repository
@@ -330,32 +345,38 @@ pip install -r requirements.txt
 > **Conda users:** `conda create -n solar python=3.10 && conda activate solar`
 > then run the pip command above.
 
-### Step 3 — Set up your API key
+### Step 3 — Download NSRDB data
 
-Create a file called `.env` in the project root (it is gitignored):
+Go to [nsrdb.nlr.gov/data-viewer](https://nsrdb.nlr.gov/data-viewer) and
+download hourly CSV files for each of the 5 sites for years 2017, 2018,
+and 2019 (15 files total). Select these attributes: GHI, DHI, DNI,
+Temperature, Wind Speed, Solar Zenith Angle, Relative Humidity.
+Enable "Convert UTC to Local Time". Save files to the `data/` folder
+using this naming convention:
 
-```bash
-echo "NREL_API_KEY=your_key_here" > .env
+```
+data/Phoenix_2017.csv, Phoenix_2018.csv, Phoenix_2019.csv
+data/Denver_2017.csv  ... and so on for all 5 sites
 ```
 
-### Step 4 — Fetch real data
+### Step 4 — Build dataset
 
 ```bash
 python src/data_loader.py
 ```
 
-This downloads real PVDAQ measurements for all 5 sites and saves them to
-`data/pvdaq_combined.csv`. Takes 1–3 minutes depending on connection speed.
+Processes all 15 CSVs, computes AC power via physics model, and saves
+`data/pvdaq_combined.csv` (~30,000 rows).
 
 ### Step 5 — Train all models
 
 ```bash
-python src/train.py
+HORIZON=1 python src/train.py
 ```
 
-Trains Linear Regression, LSTM, 1D-CNN, and CNN-LSTM. Saves all model files
-to `results/`. On CPU this takes roughly 15–20 minutes for the deep models.
-On a GPU it takes 3–5 minutes total.
+Trains Linear Regression, LSTM, 1D-CNN, and CNN-LSTM. Saves all model
+files to `results/`. On CPU this takes roughly 45–60 minutes for the
+deep models. On a GPU it takes 5–10 minutes total.
 
 ### Step 6 — Evaluate and generate plots
 
@@ -375,21 +396,17 @@ Open [http://localhost:8501](http://localhost:8501) in your browser.
 
 ---
 
-## ☁️ Quick Start — Google Colab
+## Google Colab
 
-The Colab notebook is fully self-contained — no local setup required.
+A self-contained Colab notebook is available in `notebooks/`. To use it:
 
-1. Click the badge at the top of this README
-2. In Colab: **Runtime → Change runtime type → T4 GPU**
-3. Add your NREL API key when prompted
+1. Upload the notebook to [colab.research.google.com](https://colab.research.google.com)
+2. Enable GPU: **Runtime → Change runtime type → T4 GPU**
+3. Upload your NSRDB CSV files when prompted
 4. Run all cells top to bottom
-
-The notebook includes inline implementations of every pipeline step and uses
-`ipywidgets` for an interactive hourly prediction demo.
-
 ---
 
-## 🌐 Running the App
+## Running the App
 
 The Streamlit app requires trained model files in `results/`. After running
 `train.py`, launch with:
@@ -420,15 +437,15 @@ streamlit run app/app.py
 
 ---
 
-## ⚙️ Reproducing Results
+## Reproducing Results
 
 All data and models are regenerated from scratch by the pipeline — no pre-trained
 files need to be downloaded.
 
 ```bash
 # Full reproduction from scratch
-python src/data_loader.py   # ~2 min  — fetch real PVDAQ data
-python src/train.py          # ~20 min — train all 4 models
+python src/data_loader.py   # ~1 min  — fetch real PVDAQ data
+python src/train.py          # ~5 min — train all 4 models
 python src/evaluate.py       # ~1 min  — metrics + plots
 ```
 
@@ -439,36 +456,20 @@ All random seeds are fixed for reproducibility:
 
 ---
 
-## 🔑 API Keys & Environment Setup
-
-### NREL API Key (required for data loading)
-
-1. Sign up free at [developer.nrel.gov/signup](https://developer.nrel.gov/signup)
-2. Your key is emailed instantly
-3. Create `.env` in the project root:
-
-```
-NREL_API_KEY=your_key_here
-```
-
-The `.env` file is listed in `.gitignore` and will **never** be committed to GitHub.
-In code, the key is accessed via `os.getenv("NREL_API_KEY")` — the key itself
-never appears in any source file.
-
-### Open-Meteo (no key required)
+## Weather API
 
 The Streamlit app uses [Open-Meteo](https://open-meteo.com) for live weather
 forecasts. It is completely free and requires no registration or API key.
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Override training defaults with environment variables:
 
 ```bash
-# Example: cross-site split, hold out site 5, train for 100 epochs
-SPLIT_MODE=site TEST_SITE=5 LSTM_EPOCHS=100 python src/train.py
+# Example: change forecast horizon, train for 100 epochs
+HORIZON=3 LSTM_EPOCHS=100 python src/train.py
 ```
 
 | Variable | Default | Description |
@@ -477,33 +478,29 @@ SPLIT_MODE=site TEST_SITE=5 LSTM_EPOCHS=100 python src/train.py
 | `TEST_SITE` | last site ID | Site ID withheld for testing (site split only) |
 | `LSTM_EPOCHS` | `80` | Maximum training epochs for all deep models |
 | `LSTM_BATCH` | `32` | Batch size for all deep models |
+| `HORIZON` | `1` | Hours ahead to forecast |
 
 ---
 
-## 🔧 Troubleshooting
-
-**`NREL_API_KEY not found`**
-→ Make sure `.env` exists in the project root with `NREL_API_KEY=your_key`.
-→ Run `pip install python-dotenv` if the package is missing.
-
-**`No data retrieved for any site`**
-→ Your API key may be invalid or the PVDAQ site IDs may have changed.
-→ Check available sites at [pvdaq.nrel.gov](https://pvdaq.nrel.gov) and update
-  the `SITES` list in `src/data_loader.py`.
+## Troubleshooting
 
 **`TensorFlow not installed`**
 → Run `pip install tensorflow`. On Apple Silicon Macs: `pip install tensorflow-macos`.
 → The pipeline still runs Linear Regression without TensorFlow.
 
+**`FileNotFoundError: Phoenix_2019.csv`**
+→ Make sure all 15 NSRDB CSV files are in the `data/` folder with exact names
+  like `Phoenix_2019.csv`, `Denver_2018.csv` etc.
+
 **Streamlit app shows "No trained models found"**
-→ Run `python src/train.py` before launching the app.
+→ Run `HORIZON=1 python src/train.py` before launching the app.
 
 **Open-Meteo returns no data**
 → The forecast window is limited to 7 days ahead. Choose a date within that range.
 
 ---
 
-## 📦 Dependencies
+## Dependencies
 
 ```
 numpy>=1.24
@@ -516,35 +513,27 @@ streamlit>=1.28
 requests>=2.31
 joblib>=1.3
 scipy>=1.11
-python-dotenv>=1.0
 ```
 
 Install everything: `pip install -r requirements.txt`
 
 ---
 
-## 📄 Technical Report
-
-A full academic report (Introduction, Related Work, Methods, Results, Conclusion)
-is available at `results/technical_report.docx`.
-
----
-
-## 👤 Author
+## Author
 
 **Alex Sol**
 GitHub: [@alexs-44](https://github.com/alexs-44)
 
 ---
 
-## 🤝 Acknowledgements
+## cknowledgements
 
-- [NREL PVDAQ](https://pvdaq.nrel.gov) — real PV system measurement data
+- [NREL NSRDB](https://nsrdb.nlr.gov/data-viewer) — real measured solar radiation data
 - [Open-Meteo](https://open-meteo.com) — free weather forecast API
 - Iqbal (1983), *An Introduction to Solar Radiation* — clear-sky model reference
 
 ---
 
-## 📝 License
+## License
 
 MIT License — see `LICENSE` for details.
