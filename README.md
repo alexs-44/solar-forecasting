@@ -43,8 +43,8 @@ but their output varies with weather conditions in ways that are hard to predict
 without the right tools. This project builds an end-to-end machine learning pipeline
 that answers a simple question:
 
-> **Given a location and a weather forecast, how much power will a 5 kW solar
-> system produce tomorrow?**
+ **Given a location and a weather forecast, how much power will a 5 kW solar
+ system produce tomorrow?**
 
 The pipeline covers everything from raw data ingestion through model training,
 evaluation, and a live interactive web application.
@@ -83,9 +83,9 @@ sequential models provide meaningful gains for the 1-hour ahead forecasting task
 Linear Regression dominated instantaneous prediction due to the near-linear 
 irradiance-power relationship, motivating the shift to a true forecasting formulation.
 
-> The CNN-LSTM hybrid achieves the best overall accuracy across all metrics and
-> generalises well to an unseen geographic location, confirming the value of using
-> continuous lat/lon features instead of one-hot site encodings.
+ The CNN-LSTM hybrid achieves the best overall accuracy across all metrics and
+ generalises well to an unseen geographic location, confirming the value of using
+ continuous lat/lon features instead of one-hot site encodings.
 
 **Key Findings:**
 - LSTM and CNN-LSTM outperform Linear Regression under the forecasting 
