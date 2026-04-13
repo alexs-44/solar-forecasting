@@ -38,7 +38,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Anton:wght@700;800&display=swap');
 html, body, [class*="css"] { font-family: 'DM Mono', monospace; }
 .hero {
     background: linear-gradient(135deg, #0a0a0f 0%, #0d1f2d 50%, #0a1628 100%);
@@ -46,7 +46,7 @@ html, body, [class*="css"] { font-family: 'DM Mono', monospace; }
     padding: 32px 40px; margin-bottom: 24px;
 }
 .hero h1 {
-    font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800;
+    font-family: 'Anton', sans-serif; font-size: 2.8rem; font-weight: 800;
     background: linear-gradient(90deg, #f5a623, #f7c948, #fff);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     margin: 0 0 8px 0;
