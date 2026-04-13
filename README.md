@@ -4,7 +4,7 @@
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.13+-orange)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Status](https://img.shields.io/badge/Status-Complete-brightgreen)
-![Data](https://img.shields.io/badge/Data-NREL%20PVDAQ-yellow)
+![Data](https://img.shields.io/badge/Data-NREL%20NSRDB-yellow)
 
 
 > **Predict the AC power output of a solar PV system for any location on Earth —
