@@ -26,13 +26,12 @@ across five North American climate zones. Compares Linear Regression, LSTM,
 5. [Dataset](#-dataset)
 6. [Model Architectures](#-model-architectures)
 7. [Quick Start — Local](#-quick-start--local)
-8. [Quick Start — Google Colab](#-quick-start--google-colab)
-9. [Running the App](#-running-the-app)
-10. [Reproducing Results](#-reproducing-results)
-11. [Weather API](#-weather-api)
-12. [Configuration](#-configuration)
-13. [Troubleshooting](#-troubleshooting)
-14. [Author](#-author)
+8. [Running the App](#-running-the-app)
+9. [Reproducing Results](#-reproducing-results)
+10. [Weather API](#-weather-api)
+11. [Configuration](#-configuration)
+12. [Troubleshooting](#-troubleshooting)
+13. [Author](#-author)
 
 ---
 
@@ -393,16 +392,6 @@ streamlit run app/app.py
 
 Open [http://localhost:8501](http://localhost:8501) in your browser.
 
----
-
-## Google Colab
-
-A self-contained Colab notebook is available in `notebooks/`. To use it:
-
-1. Upload the notebook to [colab.research.google.com](https://colab.research.google.com)
-2. Enable GPU: **Runtime → Change runtime type → T4 GPU**
-3. Upload your NSRDB CSV files when prompted
-4. Run all cells top to bottom
 ---
 
 ## Running the App
