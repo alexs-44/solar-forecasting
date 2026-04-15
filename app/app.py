@@ -200,7 +200,7 @@ def predict_day(models, scaler, feat_cols, X_raw, window, horizon, weather_df):
                 val  = float(model.predict(flat)[0])
             else:
                 seq = window_data.reshape(1, window, -1).astype(np.float32)
-                val = float(model.predict(seq, verbose=0).flatten()[0])
+                val = float(model.predict(seq).flatten()[0])
 
             preds[h] = max(0, val)
         # Zero out nighttime hours where GHI is below generation threshold
