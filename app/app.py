@@ -163,7 +163,7 @@ def build_features(weather_df, lat, lon, forecast_date, feat_cols):
 
 
 MODEL_COLORS = {
-    "LR": "#4C72B0",
+    "Linear Regression": "#4C72B0",
     "LSTM":              "#55A868",
     "CNN1D":             "#DD8452",
     "CNN-LSTM":          "#C44E52",
