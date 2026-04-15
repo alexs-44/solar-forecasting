@@ -531,7 +531,7 @@ GitHub: [@alexs-44](https://github.com/alexs-44)
 
 - [NREL NSRDB](https://nsrdb.nlr.gov/data-viewer) — real measured solar radiation data
 - [Open-Meteo](https://open-meteo.com) — free weather forecast API
-- Iqbal (1983), *An Introduction to Solar Radiation* — clear-sky model reference
+- Fennane, S., Kacimi, H., Mabchour, H., ALtalqi, F., & Echchelh, A. (2026). Performance enhancement of photovoltaic systems using hybrid LSTM–CNN solar forecasting integrated with P&O MPPT. *International Journal of Power Electronics and Drive System (IJPEDS)*, 17(1), 696–708. https://doi.org/10.11591/ijpeds.v17.i1.pp696-708
 
 ---
 
