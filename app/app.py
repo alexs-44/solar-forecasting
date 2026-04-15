@@ -85,7 +85,7 @@ html, body, [class*="css"] { font-family: 'DM Mono', monospace; }
 def load_models():
     models = {}
     try:
-        models["Linear Regression"] = joblib.load(RESULTS_DIR / "linear_regression.pkl")
+        models["LR"] = joblib.load(RESULTS_DIR / "linear_regression.pkl")
     except FileNotFoundError:
         pass
     try:
