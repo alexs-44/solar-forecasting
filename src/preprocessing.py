@@ -27,7 +27,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 import joblib
 
 DATA_PATH    = Path("data/nsrdb_combined.csv")
@@ -175,7 +175,7 @@ def load_and_preprocess(
     y_train     = y[train_mask]
     y_test      = y[test_mask]
 
-    scaler  = MinMaxScaler()
+    scaler  = StandardScaler()
     X_train = scaler.fit_transform(X_train_raw)
     X_test  = scaler.transform(X_test_raw)
 
@@ -198,7 +198,7 @@ def load_and_preprocess(
 def make_sequences(
     X: np.ndarray,
     y: np.ndarray,
-    window: int = 30,
+    window: int = 24,
     horizon: int = DEFAULT_HORIZON,
     site_ids: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
@@ -235,7 +235,7 @@ def make_sequences(
 def make_flat_sequences(
     X: np.ndarray,
     y: np.ndarray,
-    window: int = 30,
+    window: int = 24,
     horizon: int = DEFAULT_HORIZON,
     site_ids: np.ndarray | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
