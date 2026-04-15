@@ -66,8 +66,8 @@ def build_linear() -> LinearRegression:
 
 def build_lstm(
     n_features: int,
-    window: int = 24,
-    lstm_units: int = 64,
+    window: int = 30,
+    lstm_units: int = 128,
     dropout: float = 0.1,
     dense_units: int = 32,
     learning_rate: float = 1e-3,
@@ -104,7 +104,7 @@ def build_lstm(
 
 def build_cnn1d(
     n_features: int,
-    window: int = 24,
+    window: int = 30,
     filters: int = 64,
     kernel_size: int = 3,
     dense_units: int = 32,
@@ -152,10 +152,10 @@ def build_cnn1d(
 
 def build_cnn_lstm(
     n_features: int,
-    window: int = 24,
+    window: int = 30,
     cnn_filters: int = 64,
     kernel_size: int = 3,
-    lstm_units: int = 64,
+    lstm_units: int = 128,
     dropout: float = 0.1,
     dense_units: int = 32,
     learning_rate: float = 1e-3,
