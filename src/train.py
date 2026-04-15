@@ -25,6 +25,9 @@ from __future__ import annotations
 import os, sys, time, json
 import numpy as np
 from pathlib import Path
+import random
+random.seed(42)
+np.random.seed(42)
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -36,12 +39,16 @@ from src.models import (
     get_callbacks, save_sklearn_model, TF_AVAILABLE,
 )
 
+if TF_AVAILABLE:
+    import tensorflow as tf
+    tf.random.set_seed(42)
+
 SPLIT_MODE  = os.getenv("SPLIT_MODE",   "time")
 TEST_SITE   = os.getenv("TEST_SITE",    None)
 EPOCHS      = int(os.getenv("LSTM_EPOCHS", 80))
 BATCH       = int(os.getenv("LSTM_BATCH",  32))
 HORIZON     = int(os.getenv("HORIZON", DEFAULT_HORIZON))
-WINDOW      = 24
+WINDOW      = 30
 RESULTS_DIR = Path("results")
 RESULTS_DIR.mkdir(exist_ok=True)
 
