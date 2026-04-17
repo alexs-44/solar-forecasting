@@ -38,16 +38,24 @@ across five North American climate zones. Compares Linear Regression, LSTM,
 
 ## Project Objective
 
-Solar photovoltaic systems are the fastest-growing source of electricity worldwide,
-but their output varies with weather conditions in ways that are hard to predict
-without the right tools. This project builds an end-to-end machine learning pipeline
-that answers a simple question:
+Solar photovoltaic systems are the fastest-growing source of electricity worldwide, yet their output remains inherently variable due to changing weather conditions. This variability introduces challenges for grid reliability, energy planning, and short-term forecasting, particularly as solar penetration increases.
+
+This project develops an end-to-end machine learning pipeline for short-term solar power forecasting, designed to answer a practical and scalable question:
 
  **Given a location and a weather forecast, how much power will a 5 kW solar
  system produce on a selected day?**
 
-The pipeline covers everything from raw data ingestion through model training,
-evaluation, and a live interactive web application.
+To address this, the pipeline combines:
+
+- real measured solar irradiance and meteorological data
+- a simplified physical model to estimate baseline system output
+- multiple machine learning models trained to capture relationships between weather patterns and power generation.
+
+The pipeline covers everything from raw data ingestion and preprocessing through model training, evaluation, and a live interactive web application.
+
+In addition to building a functional forecasting tool, this project explores a key applied machine learning question:
+
+**How do model complexity, temporal structure, and dataset size influence forecasting performance in physical energy systems?**
 
 ### What this project demonstrates
 
