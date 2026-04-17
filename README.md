@@ -272,7 +272,7 @@ forecasting tasks.
 ```
 Input (24, 16)
     → LSTM(64 units)
-    → Dropout(0.2)
+    → Dropout(0.1)
     → Dense(32, ReLU)
     → Dense(1, linear)
     → Output: AC Power 1h ahead (W)
@@ -291,7 +291,7 @@ Input (24, 16)
     → MaxPool1D(2)
     → Conv1D(32 filters, kernel=3, ReLU)
     → GlobalAveragePooling1D
-    → Dropout(0.2)
+    → Dropout(0.1)
     → Dense(32, ReLU)
     → Dense(1, linear)
     → Output: AC Power 1h ahead (W)
@@ -310,7 +310,7 @@ Input (24, 16)
     → MaxPool1D(2)
     → Conv1D(32 filters, kernel=3, ReLU)   ← higher-order features
     → LSTM(64 units)                        ← temporal sequence modelling
-    → Dropout(0.2)
+    → Dropout(0.1)
     → Dense(32, ReLU)
     → Dense(1, linear)
     → Output: AC Power 1h ahead (W)
