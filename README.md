@@ -445,7 +445,7 @@ files need to be downloaded.
 ```bash
 # Full reproduction from scratch
 python src/data_loader.py   # ~1 min  — fetch real PVDAQ data
-python src/train.py          # ~5 min — train all 4 models
+python src/train.py          # ~5-10 min — train all 4 models
 python src/evaluate.py       # ~1 min  — metrics + plots
 ```
 
