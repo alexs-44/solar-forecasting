@@ -25,7 +25,7 @@ temporal dependencies in the hybrid model.
         │ LSTM(64)      │ Conv1D(64)  │ Conv1D(64)→MaxPool│
         │ Dropout(0.1)  │ MaxPool     │ Conv1D(32)→MaxPool│
         │ Dense(32,ReLU)│ Flatten     │ LSTM(64)          │
-        │               │ Dense(32)   │ Dropout(0.2)      │
+        │               │ Dense(32)   │ Dropout(0.1)      │
         │               │             │ Dense(32,ReLU)    │
         └──────┬──────────────────────┘
                │
