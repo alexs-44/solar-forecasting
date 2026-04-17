@@ -7,3 +7,5 @@ results/*.pkl
 results/*.keras
 results/*.npy
 .ipynb_checkpoints/
+results/baseline/
+results/updated_baseline/
